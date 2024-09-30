@@ -1,0 +1,42 @@
+{% extends 'blogapp/base.html' %}
+{% load cache %}
+
+{% block content %}
+{% cache 60 postdetails %}
+    <div style="background-color: gray; padding: 20px">
+        <h1>{{ Post.title }}</h1>
+
+        <p style="background-color: white; padding: 20px">{{ Post.content }}</p>
+
+        <p>by: {{ Post.author }}</p>
+        <h5>created: {{ Post.created_at }}<br>
+        updated: {{Post.updated_at }}</h5>
+        {% if Post.author == request.user %}
+        <button onclick="location.href='{% url 'delPost' Post.id %}'">Удалить</button>
+        <button onclick="location.href='{% url 'editPost' Post.id %}'">Изменить</button>
+        {% endif %}
+    </div>
+
+    <div>
+        <div>
+            <h>Написать комментарий</h>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Готово</button>
+            </form>
+        </div>
+
+        <div style="padding: 20px">
+            <h>Комментарии</h>
+            {% for c in comments %}
+                <div style="background-color: gray; padding: 20px; margin: 10px">
+                    <p style="background-color: white; padding: 20px">{{ c.text }}</p>
+                    <p>by: {{ c.author }}</p>
+                    <h5>created: {{ c.created_at }}<br>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endcache %}
+{% endblock %}

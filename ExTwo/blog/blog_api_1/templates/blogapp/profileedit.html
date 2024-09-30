@@ -1,0 +1,14 @@
+{% extends 'blogapp/base.html' %}
+
+{% block content %}
+    {{Title}}
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form1.as_p }}
+      {{ form2.as_p }}
+      <button type="submit">Готово</button>
+    </form>
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if request.user.is_authenticated %}
+    <div style="display: flex; flex-direction: row;">
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'Posts' %}'">Главная</button>
+        </div>
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'makepost' %}'">Создать пост</button>
+        </div>
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'Profile' %}'">Профиль</button>
+        </div>
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'logout' %}'">Выйти</button>
+        </div>
+    </div>
+
+{% else %}
+    <div style="display: flex; flex-direction: row;">
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'Posts' %}'">Главная</button>
+        </div>
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'registration' %}'">Зарегаться</button>
+        </div>
+        <div style="padding: 10px">
+            <button onclick="location.href='{% url 'login' %}'">Войти</button>
+        </div>
+    </div>
+
+{% endif %}
+
+{% block content %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>{{Title}}</h1>
+    <form method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+            {{ post_form.as_p }}
+        <button type="submit">готово</button>
+    </form>
+
+    <form method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+            <p>{%for t in p.tags.all %}
+            #{{t}} <button onclick="location.href='{% url 'delTag' p.id t.id %}'">удалить</button>
+            {%endfor%}</p>
+            {{ tag_form.as_p }}
+            <button type="submit">добавить тег</button>
+    </form>
+
+
+</body>
+</html>
