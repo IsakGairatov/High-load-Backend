@@ -1,6 +1,7 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.shortcuts import render, redirect
@@ -107,17 +108,22 @@ def deltag(request, post, tag):
 def Profile(request):
     if request.user.is_authenticated:
         Posts = Post.objects.filter(author=request.user).prefetch_related('comments').prefetch_related('tagrelationship_set')
+        Pnum = cache.get(f'amount of posts {Posts[0].author}')
+
+        if Pnum == None:
+            Pnum = Posts.count()
+            cache.set(f'amount of posts {Posts[0].author}', Pnum, 500)
+
         paginator = Paginator(Posts, 5)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'blogapp/profile.html', {'user': request.user, 'Posts': page_obj})
+        return render(request, 'blogapp/profile.html', {'user': request.user, 'pnum': Pnum, 'Posts': page_obj})
     else:
         return redirect('login')
 
 def ProfileEdit(request):
     if request.user.is_authenticated:
-
         if request.method == 'POST':
             f1= UpdateUserForm(request.POST, instance=request.user)
             f2 = UserDataForm(request.POST, instance=request.user.userdata)
