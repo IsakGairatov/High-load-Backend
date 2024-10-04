@@ -1,3 +1,5 @@
+import time
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
@@ -17,6 +19,7 @@ from .models import Post, UserData, TagRelationship, Tag
 
 @cache_page(60 * 1)
 def showPosts(request):
+
     Posts = Post.objects.prefetch_related('comments').prefetch_related('tagrelationship_set')
 
     paginator = Paginator(Posts, 5)
@@ -25,6 +28,7 @@ def showPosts(request):
 
     return render(request, 'blogapp/posts.html', {"Posts": page_obj})
 
+@cache_page(60 * 1)
 def showTagPosts(request, tag_id):
     Posts = TagRelationship.objects.filter(tag__id=tag_id).prefetch_related('comments').prefetch_related('tagrelationship_set')
     Posts = [p.post for p in Posts]
@@ -33,6 +37,7 @@ def showTagPosts(request, tag_id):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'blogapp/posts.html', {"Posts": page_obj})
+
 
 def showPost(request, id):
     Post0 = Post.objects.get(id=id)
@@ -105,14 +110,16 @@ def deltag(request, post, tag):
     return redirect(request.META['HTTP_REFERER'])
 
 
+@cache_page(60 * 1)
 def Profile(request):
     if request.user.is_authenticated:
         Posts = Post.objects.filter(author=request.user).prefetch_related('comments').prefetch_related('tagrelationship_set')
+
         Pnum = cache.get(f'amount of posts {Posts[0].author}')
 
         if Pnum == None:
             Pnum = Posts.count()
-            cache.set(f'amount of posts {Posts[0].author}', Pnum, 500)
+            cache.set(f'amount of posts {Posts[0].author}', Pnum, 60)
 
         paginator = Paginator(Posts, 5)
         page_number = request.GET.get("page")
@@ -166,4 +173,6 @@ class RegisterUser(CreateView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
 
