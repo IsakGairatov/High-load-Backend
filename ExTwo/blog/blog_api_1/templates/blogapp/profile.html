@@ -14,7 +14,7 @@
         <a href="{% url 'profileEdit' %}">Изменить профиль</a></div>
 
     <div>
-        <h1>Все посты от user.username ({{pnum}})</h1>
+        <h1>Все посты от {{user.username}} ({{pnum}})</h1>
         {% for p in Posts %}
             <a href="{% url 'postpage' p.id %}" style="text-decoration: none;  color: inherit;">
             <div style="background-color: gray; padding: 20px">

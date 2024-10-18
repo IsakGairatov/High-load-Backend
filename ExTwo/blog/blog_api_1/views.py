@@ -39,6 +39,7 @@ def showTagPosts(request, tag_id):
     return render(request, 'blogapp/posts.html', {"Posts": page_obj})
 
 
+
 def showPost(request, id):
     Post0 = Post.objects.get(id=id)
 

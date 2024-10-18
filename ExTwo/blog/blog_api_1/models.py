@@ -18,6 +18,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField('Tag', through='TagRelationship')
 
+
     class Meta:
         indexes = [
             models.Index(fields=['author']),
@@ -39,9 +40,11 @@ class TagRelationship(models.Model):
 
     class Meta:
         unique_together = ('post', 'tag')
+
         indexes = [
             models.Index(fields=['post', 'tag']),
         ]
+
     def __str__(self):
         return self.post.title + '_' + self.tag.name
 
@@ -51,6 +54,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         indexes = [
