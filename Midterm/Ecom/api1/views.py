@@ -125,10 +125,8 @@ def Buy(request):
     adress_id = data['adress_id']
     cardnums = data['cardnums']
 
-    pr = Product.objects.get(id=data['product_id'])
-
-
-    BuyItem.delay(request.user.id, pr.id, adress_id, cardnums)
+    pr_id = data['product_id']
+    BuyItem.delay(request.user.id, pr_id, adress_id, cardnums)
     return HttpResponse(status=204)
 
 

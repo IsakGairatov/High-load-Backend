@@ -189,5 +189,5 @@ CACHES = {
     }
 }
 
-BROKER_URL = os.environ.get('RABBITMQ_URL', 'amqp://guest:guest@localhost:5672/')
+BROKER_URL = 'amqp://localhost'
 CELERY_RESULT_BACKEND = 'rabbitmq://localhost:5672/'
