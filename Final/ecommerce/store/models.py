@@ -19,6 +19,12 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['category']),
+        ]
+
     def __str__(self):
         return self.name
 
@@ -38,11 +44,14 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+        ]
+
     def __str__(self):
         return f"Order {self.id} - {self.user.username}"
 
-    def calculate_total(self):
-        return sum(item.quantity * item.price for item in self.order_items.all())
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)
@@ -52,6 +61,11 @@ class OrderItem(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['order', 'product']),
+        ]
+
     def __str__(self):
         return f"Item {self.product.name} in Order {self.order.id}"
 
@@ -59,6 +73,11 @@ class ShoppingCart(models.Model):
     user = models.OneToOneField(User, related_name='shopping_cart', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+        ]
 
     def __str__(self):
         return f"Cart of {self.user.username}"
@@ -107,6 +126,11 @@ class Wishlist(models.Model):
     user = models.ForeignKey(User, related_name='wishlist', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+        ]
 
     def __str__(self):
         return f"Wishlist of {self.user.username}"
